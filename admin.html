@@ -1102,9 +1102,9 @@
             }
 
             try {
-                const res = await fetch('/api/admin/login', {
+                const res = await fetch('api_auth.php?action=login', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    
                     body: JSON.stringify({username, password})
                 });
                 const data = await res.json();
@@ -1179,7 +1179,7 @@
         // ============ DASHBOARD ============
         async function loadStats() {
             try {
-                const res = await fetch('/api/admin/stats', {headers: {'Authorization': sessionId}});
+                const res = await fetch('api_admin_stats.php', {headers: {}});
                 if (!res.ok) { logout(); return; }
                 const data = await res.json();
 
@@ -1199,7 +1199,7 @@
 
         async function loadRecentJobs() {
             try {
-                const res = await fetch('/api/admin/jobs?page=1&limit=5', {headers: {'Authorization': sessionId}});
+                const res = await fetch('api_admin_jobs.php?page=1&limit=5', {headers: {}});
                 if (!res.ok) return;
                 const data = await res.json();
                 const tbody = document.querySelector('#recentJobsTable tbody');
@@ -1232,12 +1232,12 @@
                 if (category) url += '&category=' + category;
                 if (status !== '') url += '&status=' + status;
 
-                const res = await fetch(url, {headers: {'Authorization': sessionId}});
+                const res = await fetch(url, {headers: {}});
                 if (!res.ok) { logout(); return; }
                 const data = await res.json();
 
                 // Load categories for filter
-                const catRes = await fetch('/api/categories');
+                const catRes = await fetch('api_categories.php');
                 const cats = await catRes.json();
                 const catSel = document.getElementById('jobCategory');
                 if (catSel) {
@@ -1279,12 +1279,12 @@
 
         async function loadJobForEdit(id) {
             try {
-                const res = await fetch('/api/admin/jobs/' + id + '/edit', {headers: {'Authorization': sessionId}});
+                const res = await fetch('api_admin_jobs.php?action=edit&id=' + id, {headers: {}});
                 if (!res.ok) throw new Error('Job not found');
                 const job = await res.json();
 
                 // Load categories
-                const catRes = await fetch('/api/categories');
+                const catRes = await fetch('api_categories.php');
                 const cats = await catRes.json();
                 const catSel = document.getElementById('editJobCategory');
                 catSel.innerHTML = '<option value="">Select Category</option>';
@@ -1327,9 +1327,9 @@
                 data.is_featured = form.get('is_featured') ? 1 : 0;
                 data.is_active = form.get('is_active') ? 1 : 0;
 
-                const res = await fetch('/api/admin/jobs/' + currentEditJobId, {
+                const res = await fetch('api_admin_jobs.php?id=' + currentEditJobId, {
                     method: 'PUT',
-                    headers: {'Content-Type': 'application/json', 'Authorization': sessionId},
+                    
                     body: JSON.stringify(data)
                 });
 
@@ -1349,9 +1349,9 @@
         async function deleteJob(id) {
             if (!confirm('Delete this job? This action cannot be undone.')) return;
             try {
-                const res = await fetch('/api/admin/jobs/' + id, {
+                const res = await fetch('api_admin_jobs.php?id=' + id, {
                     method: 'DELETE',
-                    headers: {'Authorization': sessionId}
+                    headers: {}
                 });
                 if (res.ok) {
                     loadJobs();
@@ -1365,9 +1365,9 @@
 
         async function toggleJob(id) {
             try {
-                const res = await fetch('/api/admin/jobs/' + id + '/toggle', {
+                const res = await fetch('api_admin_jobs.php?action=toggle&id=' + id, {
                     method: 'POST',
-                    headers: {'Authorization': sessionId}
+                    headers: {}
                 });
                 if (res.ok) {
                     loadJobs();
@@ -1382,7 +1382,7 @@
         // ============ ADD JOB ============
         async function loadCategoriesForAddJob() {
             try {
-                const res = await fetch('/api/categories');
+                const res = await fetch('api_categories.php');
                 const cats = await res.json();
                 document.getElementById('addJobCategory').innerHTML = '<option value="">Select Category</option>';
                 cats.forEach(c => document.getElementById('addJobCategory').innerHTML += `<option value="${c.id}">${c.name}</option>`);
@@ -1399,9 +1399,9 @@
                 data.is_featured = form.get('is_featured') ? 1 : 0;
                 data.is_active = form.get('is_active') ? 1 : 0;
 
-                const res = await fetch('/api/admin/jobs', {
+                const res = await fetch('api_admin_jobs.php', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'Authorization': sessionId},
+                    
                     body: JSON.stringify(data)
                 });
 
@@ -1422,7 +1422,7 @@
         // ============ CATEGORIES ============
         async function loadCategories() {
             try {
-                const res = await fetch('/api/admin/categories', {headers: {'Authorization': sessionId}});
+                const res = await fetch('api_admin_categories.php', {headers: {}});
                 if (!res.ok) { logout(); return; }
                 const cats = await res.json();
                 document.querySelector('#categoriesTable tbody').innerHTML = (cats || []).map(c => `
@@ -1458,9 +1458,9 @@
                     return;
                 }
 
-                const res = await fetch('/api/admin/categories', {
+                const res = await fetch('api_admin_categories.php', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'Authorization': sessionId},
+                    
                     body: JSON.stringify(data)
                 });
 
@@ -1480,9 +1480,9 @@
         async function deleteCategory(id) {
             if (!confirm('Delete this category? This action cannot be undone.')) return;
             try {
-                const res = await fetch('/api/admin/categories/' + id, {
+                const res = await fetch('api_admin_categories.php?id=' + id, {
                     method: 'DELETE',
-                    headers: {'Authorization': sessionId}
+                    headers: {}
                 });
                 if (res.ok) {
                     loadCategories();
@@ -1498,8 +1498,8 @@
         async function loadSubcategories() {
             try {
                 const [subRes, catRes] = await Promise.all([
-                    fetch('/api/admin/subcategories', {headers: {'Authorization': sessionId}}),
-                    fetch('/api/categories')
+                    fetch('api_admin_subcategories.php', {headers: {}}),
+                    fetch('api_categories.php')
                 ]);
                 if (!subRes.ok) { logout(); return; }
                 const subs = await subRes.json();
@@ -1540,9 +1540,9 @@
                 }
 
                 const payload = { category_id: catId, name };
-                const res = await fetch('/api/admin/subcategories', {
+                const res = await fetch('api_admin_subcategories.php', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json', 'Authorization': sessionId},
+                    
                     body: JSON.stringify(payload)
                 });
                 if (res.ok) {
@@ -1560,9 +1560,9 @@
         async function deleteSubcategory(id) {
             if (!confirm('Delete this sub category?')) return;
             try {
-                const res = await fetch('/api/admin/subcategories/' + id, {
+                const res = await fetch('api_admin_subcategories.php?id=' + id, {
                     method: 'DELETE',
-                    headers: {'Authorization': sessionId}
+                    headers: {}
                 });
                 if (res.ok) loadSubcategories();
                 else alert('Unable to delete sub category');
@@ -1574,7 +1574,7 @@
         // ============ APPLICATIONS ============
         async function loadApplications() {
             try {
-                const res = await fetch('/api/admin/applications', {headers: {'Authorization': sessionId}});
+                const res = await fetch('api_admin_applications.php', {headers: {}});
                 if (!res.ok) { logout(); return; }
                 const data = await res.json();
                 document.querySelector('#applicationsTable tbody').innerHTML = (data.applications || []).map(a => `

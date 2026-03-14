@@ -218,14 +218,14 @@
     <script src="js/main.js"></script>
     <script>
         // Load stats
-        fetch('/api/stats')
+        fetch('api_stats.php')
             .then(r => r.json())
             .then(data => {
                 document.getElementById('jobCount').textContent = data.total_jobs + '+ Jobs available';
             });
 
         // Load categories
-        fetch('/api/categories')
+        fetch('api_categories.php')
             .then(r => r.json())
             .then(categories => {
                 const catSelect = document.getElementById('categorySelect');

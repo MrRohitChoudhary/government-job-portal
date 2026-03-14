@@ -1,0 +1,32 @@
+# Disable directory browsing
+Options -Indexes
+
+# Protect SQLite database from being downloaded directly by anyone
+<Files ~ "\.db$">
+    Order allow,deny
+    Deny from all
+</Files>
+<Files ~ "\.sqlite$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Protect PHP system files and logs
+<Files ~ "\.log$">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Optional: If you want to redirect HTTP to HTTPS automatically (uncomment below if needed)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    
+    # Optional Clean URLs: If someone types /jobs, it serves jobs.html
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^(.*)$ $1.html [L,QSA]
+</IfModule>

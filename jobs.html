@@ -613,7 +613,7 @@
         };
 
         // Load categories
-        fetch('/api/categories')
+        fetch('api_categories.php')
             .then(r => r.json())
             .then(cats => {
                 const sel = document.getElementById('categorySelect');
