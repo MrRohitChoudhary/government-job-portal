@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Karnataka & AP Government Jobs - Sarkari Result</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/themify-icons.css">
+    <link rel="stylesheet" href="css/nice-select.css">
+    <link rel="stylesheet" href="css/flaticon.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/slicknav.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-area">
+            <div id="sticky-header" class="main-header-area">
+                <div class="container-fluid">
+                    <div class="header_bottom_border">
+                        <div class="row align-items-center">
+                            <div class="col-xl-3 col-lg-2">
+                                <div class="logo">
+                                    <a href="/"><img src="img/logo.png" alt=""></a>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-7">
+                                <div class="main-menu d-none d-lg-block">
+                                    <nav>
+                                        <ul id="navigation">
+                                            <li><a href="/" class="active">home</a></li>
+                                            <li><a href="/jobs">Browse Jobs</a></li>
+                                            <li><a href="#">States <i class="ti-angle-down"></i></a>
+                                                <ul class="submenu">
+                                                    <li><a href="/jobs?location=Karnataka">Karnataka Jobs</a></li>
+                                                    <li><a href="/jobs?location=Andhra+Pradesh">Andhra Pradesh Jobs</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="#">Category <i class="ti-angle-down"></i></a>
+                                                <ul class="submenu" id="categoryMenu"></ul>
+                                            </li>
+                                            <li><a href="#">Contact</a></li>
+                                        </ul>
+                                    </nav>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-lg-3 d-none d-lg-block">
+                                <div class="Appointment">
+                                    <div class="phone_num d-none d-xl-block">
+                                        <a href="/admin">Admin Login</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="slider_area">
+        <div class="single_slider d-flex align-items-center slider_bg_1">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-7 col-md-6">
+                        <div class="slider_text">
+                            <h5 class="wow fadeInLeft" id="jobCount">Loading...</h5>
+                            <h3 class="wow fadeInLeft">Find your Dream Government Job</h3>
+                            <p class="wow fadeInLeft">Karnataka & Andhra Pradesh Government Jobs | Sarkari Naukri</p>
+                            <div class="sldier_btn wow fadeInLeft">
+                                <a href="/jobs" class="boxed-btn3">Browse All Jobs</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ilstration_img wow fadeInRight d-none d-lg-block text-right">
+            <img src="img/banner/illustration.png" alt="">
+        </div>
+    </div>
+
+    <div class="catagory_area">
+        <div class="container">
+            <form action="/jobs" method="GET" class="row cat_search">
+                <div class="col-lg-3 col-md-4">
+                    <div class="single_input">
+                        <input type="text" name="search" id="searchInput" placeholder="Search keyword">
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <div class="single_input">
+                        <select name="location" id="locationSelect" class="wide">
+                            <option value="">All Locations</option>
+                            <option value="Karnataka">Karnataka</option>
+                            <option value="Andhra Pradesh">Andhra Pradesh</option>
+                            <option value="All India">All India</option>
+                            <option value="Bangalore">Bangalore</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4">
+                    <div class="single_input">
+                        <select name="category" id="categorySelect" class="wide">
+                            <option value="">All Categories</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-12">
+                    <div class="job_btn">
+                        <button type="submit" class="boxed-btn3">Find Job</button>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="popular_search d-flex align-items-center">
+                        <span>Popular Search:</span>
+                        <ul>
+                            <li><a href="/jobs?category=1">IAS</a></li>
+                            <li><a href="/jobs?category=2">IPS</a></li>
+                            <li><a href="/jobs?category=3">Banking</a></li>
+                            <li><a href="/jobs?category=4">Teaching</a></li>
+                            <li><a href="/jobs?category=7">Karnataka Govt</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popular_catagory_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section_title mb-40">
+                        <h3>Popular Categories</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="categoriesContainer"></div>
+        </div>
+    </div>
+
+    <div class="job_listing_area">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="section_title">
+                        <h3>Latest Government Jobs</h3>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="brouse_job text-right">
+                        <a href="/jobs" class="boxed-btn4">Browse More Job</a>
+                    </div>
+                </div>
+            </div>
+            <div class="job_lists">
+                <div class="row" id="jobsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="featured_candidates_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section_title text-center mb-40">
+                        <h3>Featured Government Jobs</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="candidate_active owl-carousel" id="featuredJobs"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer_top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-3 col-md-6 col-lg-3">
+                        <div class="footer_widget">
+                            <div class="footer_logo"><a href="/"><img src="img/logo.png" alt=""></a></div>
+                            <p>info@jobportal.com<br>+91 98765 43210</p>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-md-6 col-lg-2">
+                        <div class="footer_widget">
+                            <h3 class="footer_title">Company</h3>
+                            <ul><li><a href="#">About</a></li><li><a href="#">FAQ</a></li></ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 col-lg-3">
+                        <div class="footer_widget">
+                            <h3 class="footer_title">Category</h3>
+                            <ul>
+                                <li><a href="/jobs?category=1">KAS / IAS</a></li>
+                                <li><a href="/jobs?category=3">Banking Jobs</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/vendor/jquery-1.12.4.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Load stats
+        fetch('/api/stats')
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('jobCount').textContent = data.total_jobs + '+ Jobs available';
+            });
+
+        // Load categories
+        fetch('/api/categories')
+            .then(r => r.json())
+            .then(categories => {
+                const catSelect = document.getElementById('categorySelect');
+                const catMenu = document.getElementById('categoryMenu');
+                const catContainer = document.getElementById('categoriesContainer');
+                
+                categories.forEach(cat => {
+                    catSelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+                    catMenu.innerHTML += `<li><a href="/jobs?category=${cat.id}">${cat.name}</a></li>`;
+                    catContainer.innerHTML += `
+                        <div class="col-lg-4 col-xl-3 col-md-6">
+                            <div class="single_catagory">
+                                <a href="/jobs?category=${cat.id}"><h4>${cat.name}</h4></a>
+                                <p><span>${cat.job_count}</span> Available</p>
+                            </div>
+                        </div>`;
+                });
+            });
+
+        // Load recent jobs
+        fetch('/api/jobs?limit=6')
+            .then(r => r.json())
+            .then(jobs => {
+                const jobsContainer = document.getElementById('jobsContainer');
+                if (jobs.length === 0) {
+                    jobsContainer.innerHTML = '<div class="col-12 text-center"><h4>No jobs found</h4></div>';
+                } else {
+                    jobs.forEach(job => {
+                        jobsContainer.innerHTML += `
+                            <div class="col-lg-12 col-md-12">
+                                <div class="single_jobs white-bg d-flex justify-content-between">
+                                    <div class="jobs_left d-flex align-items-center">
+                                        <div class="thumb"><img src="img/svg_icon/1.svg" alt=""></div>
+                                        <div class="jobs_conetent">
+                                            <a href="/jobs/${job.slug}"><h4>${job.title}</h4></a>
+                                            <div class="links_locat d-flex align-items-center">
+                                                <div class="location"><p><i class="fa fa-map-marker"></i> ${job.location || 'N/A'}</p></div>
+                                                <div class="location"><p><i class="fa fa-clock-o"></i> ${job.job_type || 'Full Time'}</p></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="jobs_right">
+                                        <div class="apply_now">
+                                            <a href="/jobs/${job.slug}" class="boxed-btn3">Apply Now</a>
+                                        </div>
+                                        <div class="date"><p>Last Date: ${job.form_end_date || 'N/A'}</p></div>
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+                }
+            });
+
+        // Load featured jobs
+        fetch('/api/jobs?limit=5')
+            .then(r => r.json())
+            .then(jobs => {
+                const featured = document.getElementById('featuredJobs');
+                if (jobs.length === 0) {
+                    featured.innerHTML = '<div class="text-center">No featured jobs</div>';
+                } else {
+                    jobs.forEach(job => {
+                        featured.innerHTML += `
+                            <div class="single_candidates text-center">
+                                <div class="thumb"><img src="img/candiateds/1.png" alt=""></div>
+                                <a href="/jobs/${job.slug}"><h4>${job.title}</h4></a>
+                                <p>${job.organization}</p>
+                            </div>`;
+                    });
+                }
+            });
+    </script>
+</body>
+</html>

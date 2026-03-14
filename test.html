@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Test Suite</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; padding: 20px; background: #f5f5f5; }
+        .test-container { max-width: 1200px; margin: 0 auto; }
+        .test-section { background: white; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .test-result { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .test-pass { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .test-fail { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .test-pending { background: #e2e3e5; color: #383d41; border: 1px solid #d6d8db; }
+        .test-title { font-size: 24px; font-weight: bold; margin-bottom: 20px; color: #333; }
+        .progress-bar { height: 30px; background: #e9ecef; border-radius: 4px; overflow: hidden; margin: 10px 0; }
+        .progress-fill { height: 100%; background: #28a745; transition: width 0.3s; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; }
+        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; text-align: center; }
+        .stat-card h3 { margin: 0; font-size: 32px; }
+        .stat-card p { margin: 5px 0 0 0; opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-title">🧪 Job Board Website Testing Suite</div>
+        
+        <div class="test-section">
+            <h2>Test Summary</h2>
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 id="totalTests">0</h3>
+                    <p>Total Tests</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="passedTests" style="color: #4ade80;">0</h3>
+                    <p>Passed</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="failedTests" style="color: #f87171;">0</h3>
+                    <p>Failed</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="pendingTests">0</h3>
+                    <p>Pending</p>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>API Tests</h2>
+            <div id="apiTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Page Tests</h2>
+            <div id="pageTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Admin Panel Tests</h2>
+            <div id="adminTests"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Detailed Results</h2>
+            <div id="detailedResults"></div>
+        </div>
+    </div>
+
+    <script>
+        const results = [];
+        let stats = { total: 0, passed: 0, failed: 0, pending: 0 };
+
+        function addTest(name, category) {
+            return {
+                name,
+                category,
+                status: 'pending',
+                message: '',
+                details: {}
+            };
+        }
+
+        function recordResult(test, status, message = '', details = {}) {
+            test.status = status;
+            test.message = message;
+            test.details = details;
+            results.push(test);
+            
+            stats.total++;
+            if (status === 'pass') stats.passed++;
+            else if (status === 'fail') stats.failed++;
+            else stats.pending++;
+            
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('totalTests').textContent = stats.total;
+            document.getElementById('passedTests').textContent = stats.passed;
+            document.getElementById('failedTests').textContent = stats.failed;
+            document.getElementById('pendingTests').textContent = stats.pending;
+            
+            const percentage = stats.total > 0 ? Math.round((stats.passed / stats.total) * 100) : 0;
+            const fill = document.getElementById('progressFill');
+            fill.style.width = percentage + '%';
+            fill.textContent = percentage + '%';
+            
+            // Group by category
+            const byCategory = {};
+            results.forEach(r => {
+                if (!byCategory[r.category]) byCategory[r.category] = [];
+                byCategory[r.category].push(r);
+            });
+
+            // Update categories
+            Object.keys(byCategory).forEach(cat => {
+                const tests = byCategory[cat];
+                const html = tests.map(t => `
+                    <div class="test-result test-${t.status}">
+                        <strong>${t.status === 'pass' ? '✓' : t.status === 'fail' ? '✗' : '⏳'} ${t.name}</strong>
+                        ${t.message ? `<br><small>${t.message}</small>` : ''}
+                    </div>
+                `).join('');
+                
+                const el = document.getElementById(cat + 'Tests');
+                if (el) el.innerHTML = html;
+            });
+
+            // Detailed results
+            const detailed = results.map(r => `
+                <div class="test-result test-${r.status}">
+                    <strong>[${r.category}] ${r.name}</strong>
+                    <p>Status: ${r.status}</p>
+                    ${r.message ? `<p>Message: ${r.message}</p>` : ''}
+                    ${Object.keys(r.details).length > 0 ? `<p>Details: <pre>${JSON.stringify(r.details, null, 2)}</pre></p>` : ''}
+                </div>
+            `).join('');
+            document.getElementById('detailedResults').innerHTML = detailed;
+        }
+
+        // ==================== RUN TESTS ====================
+
+        (async function() {
+            console.log('Starting tests...');
+            
+            // API Tests
+            console.log('Testing APIs...');
+            
+            // Test 1: Get all jobs
+            const test1 = addTest('GET /api/jobs', 'apiTests');
+            try {
+                const res = await fetch('/api/jobs?limit=3');
+                const data = await res.json();
+                if (res.ok && data.jobs && Array.isArray(data.jobs)) {
+                    recordResult(test1, 'pass', `Retrieved ${data.jobs.length} jobs`, data);
+                } else {
+                    recordResult(test1, 'fail', 'Invalid response format', data);
+                }
+            } catch (err) {
+                recordResult(test1, 'fail', err.message);
+            }
+
+            // Test 2: Get all jobs (paginated)
+            const test2 = addTest('GET /api/all-jobs', 'apiTests');
+            try {
+                const res = await fetch('/api/all-jobs?page=1&limit=5');
+                const data = await res.json();
+                if (res.ok && data.jobs && data.total !== undefined) {
+                    recordResult(test2, 'pass', `Found ${data.total} total jobs`, data);
+                } else {
+                    recordResult(test2, 'fail', 'Invalid response format', data);
+                }
+            } catch (err) {
+                recordResult(test2, 'fail', err.message);
+            }
+
+            // Test 3: Get categories
+            const test3 = addTest('GET /api/categories', 'apiTests');
+            try {
+                const res = await fetch('/api/categories');
+                const data = await res.json();
+                if (res.ok && Array.isArray(data)) {
+                    recordResult(test3, 'pass', `Retrieved ${data.length} categories`, data);
+                } else {
+                    recordResult(test3, 'fail', 'Invalid response format', data);
+                }
+            } catch (err) {
+                recordResult(test3, 'fail', err.message);
+            }
+
+            // Test 4: Get stats
+            const test4 = addTest('GET /api/stats', 'apiTests');
+            try {
+                const res = await fetch('/api/stats');
+                const data = await res.json();
+                if (res.ok && data.total_jobs !== undefined) {
+                    recordResult(test4, 'pass', `Stats: ${data.total_jobs} total jobs, ${data.active_jobs} active`, data);
+                } else {
+                    recordResult(test4, 'fail', 'Invalid response format', data);
+                }
+            } catch (err) {
+                recordResult(test4, 'fail', err.message);
+            }
+
+            // Test 5: Get job by slug
+            const test5 = addTest('GET /api/jobs/:slug', 'apiTests');
+            try {
+                const jobRes = await fetch('/api/jobs?limit=1');
+                const jobs = await jobRes.json();
+                if (jobs.jobs && jobs.jobs.length > 0) {
+                    const slug = jobs.jobs[0].slug;
+                    const res = await fetch(`/api/jobs/${slug}`);
+                    const data = await res.json();
+                    if (res.ok && data.id) {
+                        recordResult(test5, 'pass', `Retrieved job: ${data.title}`, { slug, ...data });
+                    } else {
+                        recordResult(test5, 'fail', 'Invalid response format', data);
+                    }
+                } else {
+                    recordResult(test5, 'pending', 'No jobs in database to test');
+                }
+            } catch (err) {
+                recordResult(test5, 'fail', err.message);
+            }
+
+            // Page Tests
+            console.log('Testing pages...');
+
+            // Test 6: Index page
+            const test6 = addTest('Index Page (/)', 'pageTests');
+            try {
+                const res = await fetch('/');
+                if (res.ok) {
+                    recordResult(test6, 'pass', 'Page loads successfully');
+                } else {
+                    recordResult(test6, 'fail', `HTTP ${res.status}`);
+                }
+            } catch (err) {
+                recordResult(test6, 'fail', err.message);
+            }
+
+            // Test 7: Jobs page
+            const test7 = addTest('Jobs Page (/jobs)', 'pageTests');
+            try {
+                const res = await fetch('/jobs');
+                if (res.ok) {
+                    recordResult(test7, 'pass', 'Page loads successfully');
+                } else {
+                    recordResult(test7, 'fail', `HTTP ${res.status}`);
+                }
+            } catch (err) {
+                recordResult(test7, 'fail', err.message);
+            }
+
+            // Test 8: Admin page
+            const test8 = addTest('Admin Panel (/admin)', 'adminTests');
+            try {
+                const res = await fetch('/admin');
+                if (res.ok) {
+                    recordResult(test8, 'pass', 'Admin panel loads successfully');
+                } else {
+                    recordResult(test8, 'fail', `HTTP ${res.status}`);
+                }
+            } catch (err) {
+                recordResult(test8, 'fail', err.message);
+            }
+
+            // Test 9: Admin login
+            const test9 = addTest('Admin Login (POST /api/admin/login)', 'adminTests');
+            try {
+                const res = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'admin', password: 'admin123' })
+                });
+                const data = await res.json();
+                if (res.ok && data.success && data.sessionId) {
+                    recordResult(test9, 'pass', 'Login successful', { sessionId: data.sessionId.substring(0, 20) + '...' });
+                    
+                    // Test 10: Get admin stats
+                    const test10 = addTest('Admin Stats (GET /api/admin/stats)', 'adminTests');
+                    try {
+                        const statsRes = await fetch('/api/admin/stats', {
+                            headers: { 'Authorization': data.sessionId }
+                        });
+                        const statsData = await statsRes.json();
+                        if (statsRes.ok && statsData.total_jobs !== undefined) {
+                            recordResult(test10, 'pass', `${statsData.total_jobs} jobs, ${statsData.active_jobs} active`, statsData);
+                        } else {
+                            recordResult(test10, 'fail', 'Invalid response', statsData);
+                        }
+                    } catch (err) {
+                        recordResult(test10, 'fail', err.message);
+                    }
+
+                    // Test 11: Get admin jobs
+                    const test11 = addTest('Get Admin Jobs (GET /api/admin/jobs)', 'adminTests');
+                    try {
+                        const jobsRes = await fetch('/api/admin/jobs', {
+                            headers: { 'Authorization': data.sessionId }
+                        });
+                        const jobsData = await jobsRes.json();
+                        if (jobsRes.ok && jobsData.jobs && Array.isArray(jobsData.jobs)) {
+                            recordResult(test11, 'pass', `Retrieved ${jobsData.jobs.length} jobs (${jobsData.total} total)`, jobsData);
+                        } else {
+                            recordResult(test11, 'fail', 'Invalid response', jobsData);
+                        }
+                    } catch (err) {
+                        recordResult(test11, 'fail', err.message);
+                    }
+
+                    // Test 12: Get admin categories
+                    const test12 = addTest('Get Admin Categories (GET /api/admin/categories)', 'adminTests');
+                    try {
+                        const catsRes = await fetch('/api/admin/categories', {
+                            headers: { 'Authorization': data.sessionId }
+                        });
+                        const catsData = await catsRes.json();
+                        if (catsRes.ok && Array.isArray(catsData)) {
+                            recordResult(test12, 'pass', `Retrieved ${catsData.length} categories`, catsData);
+                        } else {
+                            recordResult(test12, 'fail', 'Invalid response', catsData);
+                        }
+                    } catch (err) {
+                        recordResult(test12, 'fail', err.message);
+                    }
+                } else {
+                    recordResult(test9, 'fail', data.error || 'Login failed');
+                }
+            } catch (err) {
+                recordResult(test9, 'fail', err.message);
+            }
+
+            console.log('Tests complete!');
+            console.log('Results:', results);
+        })();
+    </script>
+</body>
+</html>
