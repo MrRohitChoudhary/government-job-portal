@@ -80,7 +80,7 @@
         }
 
         .job_filter h3:before {
-            content: '⚙️';
+            content: '⚙️ ';
             font-size: 22px;
         }
 
@@ -472,14 +472,14 @@
                     <div class="header_bottom_border">
                         <div class="row align-items-center">
                             <div class="col-xl-3 col-lg-2">
-                                <div class="logo"><a href="/"><img src="img/logo.png" alt="Logo"></a></div>
+                                <div class="logo"><a href="index.html"><img src="img/logo.png" alt="Logo"></a></div>
                             </div>
                             <div class="col-xl-6 col-lg-7">
                                 <div class="main-menu d-none d-lg-block">
                                     <nav>
                                         <ul id="navigation">
-                                            <li><a href="/">Home</a></li>
-                                            <li><a href="/jobs" class="active">Browse Jobs</a></li>
+                                            <li><a href="index.html">Home</a></li>
+                                            <li><a href="jobs.html" class="active">Browse Jobs</a></li>
                                             <li><a href="#">Category <i class="ti-angle-down"></i></a>
                                                 <ul class="submenu" id="categoryMenu"></ul>
                                             </li>
@@ -489,7 +489,7 @@
                             </div>
                             <div class="col-xl-3 col-lg-3 d-none d-lg-block">
                                 <div class="Appointment">
-                                    <div class="phone_num d-none d-xl-block"><a href="/admin">Admin Login</a></div>
+                                    <div class="phone_num d-none d-xl-block"><a href="admin.html">Admin Login</a></div>
                                 </div>
                             </div>
                         </div>
@@ -540,7 +540,7 @@
                             </div>
                             <div class="single_field">
                                 <select name="job_type" id="jobTypeSelect">
-                                    <option value="">⏱️ Job Type</option>
+                                    <option value="">⏳ Job Type</option>
                                     <option value="Full Time">Full Time</option>
                                     <option value="Part Time">Part Time</option>
                                     <option value="Contract">Contract</option>
@@ -559,7 +559,7 @@
                     <div class="recent_joblist white-bg">
                         <div class="row align-items-center">
                             <div class="col-md-6">
-                                <h4 id="jobCount">Loading...</h4>
+                                <h4 id="jobCount">📊 Loading...</h4>
                             </div>
                             <div class="col-md-6">
                                 <div style="text-align: right;">
@@ -620,7 +620,7 @@
                 const menu = document.getElementById('categoryMenu');
                 cats.forEach(c => {
                     sel.innerHTML += `<option value="${c.id}">${c.name}</option>`;
-                    menu.innerHTML += `<li><a href="/jobs?category=${c.id}">${c.name}</a></li>`;
+                    menu.innerHTML += `<li><a href="jobs.html?category=${c.id}">${c.name}</a></li>`;
                 });
                 if (filters.category) sel.value = filters.category;
             })
@@ -640,7 +640,7 @@
 
         function loadJobs(page = 1) {
             currentPage = page;
-            const url = `/api/all-jobs?page=${page}&search=${encodeURIComponent(filters.search)}&category=${filters.category}&location=${encodeURIComponent(filters.location)}&job_type=${encodeURIComponent(filters.job_type)}&sort=${filters.sort}`;
+            const url = `api_all_jobs.php?page=${page}&search=${encodeURIComponent(filters.search)}&category=${filters.category}&location=${encodeURIComponent(filters.location)}&job_type=${encodeURIComponent(filters.job_type)}&sort=${filters.sort}`;
 
             fetch(url)
                 .then(r => r.json())
@@ -651,7 +651,7 @@
                     if (data.jobs.length === 0) {
                         container.innerHTML = `
                             <div class="empty-state">
-                                <h4>😔 No Jobs Found</h4>
+                                <h4>🙁 No Jobs Found</h4>
                                 <p>Try adjusting your filters or search keywords</p>
                             </div>
                         `;
@@ -666,7 +666,7 @@
                                         </div>
                                         <div class="jobs_conetent">
                                             <div class="organization-name">${job.organization || 'Organization'}</div>
-                                            <a href="/jobs/${job.slug}">
+                                            <a href="job-details.html?slug=${job.slug}">
                                                 <h4>${job.title}</h4>
                                             </a>
                                             <div class="links_locat d-flex align-items-center flex-wrap">
@@ -685,7 +685,7 @@
                                     </div>
                                     <div class="jobs_right">
                                         <div class="apply_now">
-                                            <a href="/jobs/${job.slug}">View Details</a>
+                                            <a href="job-details.html?slug=${job.slug}">View Details</a>
                                         </div>
                                         <div class="date">
                                             <p><i class="fas fa-calendar-alt"></i> ${job.form_end_date ? new Date(job.form_end_date).toLocaleDateString() : 'No Deadline'}</p>

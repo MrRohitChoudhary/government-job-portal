@@ -574,6 +574,9 @@
                 <a href="#" onclick="showPage('applications')" class="nav-link" id="navApplications">
                     <i class="fas fa-file-alt"></i> <span>Applications</span>
                 </a>
+                <a href="#" onclick="showPage('settings')" class="nav-link" id="navSettings">
+                    <i class="fas fa-cog"></i> <span>Settings</span>
+                </a>
                 <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
                 <a href="#" onclick="logout()" class="nav-link">
                     <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
@@ -590,7 +593,7 @@
                     <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
                 </div>
 
-                <p style="color: #718096; margin-bottom: 20px;">Welcome, <strong id="adminName">Admin</strong>! Here's your portal overview.</p>
+                <p style="color: #718096; margin-bottom: 20px;">Welcome, <strong id="adminDashboardName">Prabhakara Rao</strong>! Here's your portal overview.</p>
 
                 <!-- Stats Grid -->
                 <div class="stats-grid">
@@ -1082,6 +1085,39 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Settings Page -->
+            <div id="pageSettings" class="hidden">
+                <div class="page-header">
+                    <h2><i class="fas fa-cog" style="color: var(--primary); margin-right: 10px;"></i>Settings</h2>
+                </div>
+
+                <div class="card" style="max-width: 500px;">
+                    <div class="card-header">
+                        <h4>Change Password</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="changePasswordError" class="alert alert-danger hidden"></div>
+                        <div id="changePasswordSuccess" class="alert alert-success hidden"></div>
+                        
+                        <form id="changePasswordForm">
+                            <div class="mb-3">
+                                <label class="form-label">Current Password</label>
+                                <input type="password" id="currentPassword" class="form-control" required placeholder="Enter current password">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">New Password</label>
+                                <input type="password" id="newPassword" class="form-control" required placeholder="Minimum 6 characters">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" class="form-control" required placeholder="Confirm new password">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Update Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1180,7 +1216,7 @@
         async function loadStats() {
             try {
                 const res = await fetch('api_admin_stats.php', {headers: {}});
-                if (!res.ok) { logout(); return; }
+                if (!res.ok) throw new Error('Network error');
                 const data = await res.json();
 
                 document.getElementById('statTotalJobs').textContent = data.total_jobs || 0;
@@ -1227,13 +1263,13 @@
                 const category = document.getElementById('jobCategory')?.value || '';
                 const status = document.getElementById('jobStatus')?.value || '';
 
-                let url = '/api/admin/jobs?page=1';
+                let url = 'api_admin_jobs.php?page=1';
                 if (search) url += '&search=' + encodeURIComponent(search);
                 if (category) url += '&category=' + category;
                 if (status !== '') url += '&status=' + status;
 
                 const res = await fetch(url, {headers: {}});
-                if (!res.ok) { logout(); return; }
+                if (!res.ok) throw new Error('Network error');
                 const data = await res.json();
 
                 // Load categories for filter
@@ -1423,7 +1459,7 @@
         async function loadCategories() {
             try {
                 const res = await fetch('api_admin_categories.php', {headers: {}});
-                if (!res.ok) { logout(); return; }
+                if (!res.ok) throw new Error('Network error');
                 const cats = await res.json();
                 document.querySelector('#categoriesTable tbody').innerHTML = (cats || []).map(c => `
                     <tr>
@@ -1501,7 +1537,7 @@
                     fetch('api_admin_subcategories.php', {headers: {}}),
                     fetch('api_categories.php')
                 ]);
-                if (!subRes.ok) { logout(); return; }
+                if (!subRes.ok) throw new Error('Network error');
                 const subs = await subRes.json();
                 const cats = await catRes.json();
 
@@ -1575,7 +1611,7 @@
         async function loadApplications() {
             try {
                 const res = await fetch('api_admin_applications.php', {headers: {}});
-                if (!res.ok) { logout(); return; }
+                if (!res.ok) throw new Error('Network error');
                 const data = await res.json();
                 document.querySelector('#applicationsTable tbody').innerHTML = (data.applications || []).map(a => `
                     <tr>
@@ -1595,9 +1631,48 @@
             }
         }
 
+        // ============ SETTINGS (CHANGE PASSWORD) ============
+        document.getElementById('changePasswordForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const current_password = document.getElementById('currentPassword').value;
+            const new_password = document.getElementById('newPassword').value;
+            const confirm_password = document.getElementById('confirmPassword').value;
+
+            if (new_password !== confirm_password) {
+                showError('changePasswordError', 'New passwords do not match');
+                return;
+            }
+
+            try {
+                const res = await fetch('api_change_password.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        current_password,
+                        new_password,
+                        confirm_password
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    showSuccess('changePasswordSuccess', 'Password updated successfully!');
+                    document.getElementById('changePasswordForm').reset();
+                } else {
+                    showError('changePasswordError', data.error || 'Failed to update password');
+                }
+            } catch (err) {
+                showError('changePasswordError', 'Error: ' + err.message);
+            }
+        };
+
         // ============ INITIALIZATION ============
         window.addEventListener('load', () => {
             if (sessionId) {
+                const adminName = localStorage.getItem('adminName');
+                if (adminName) {
+                    const dashboardName = document.getElementById('adminDashboardName');
+                    if (dashboardName) dashboardName.textContent = adminName;
+                }
                 document.getElementById('loginPage').classList.add('hidden');
                 document.getElementById('adminPanel').classList.remove('hidden');
                 showPage('dashboard');

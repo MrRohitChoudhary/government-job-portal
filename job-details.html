@@ -460,15 +460,15 @@
         }
 
         .single_wrap:nth-child(2) h4::before {
-            content: '✅';
+            content: 'âœ…';
         }
 
         .single_wrap:nth-child(3) h4::before {
-            content: '💼';
+            content: 'ðŸ’¼';
         }
 
         .single_wrap:nth-child(4) h4::before {
-            content: '📝';
+            content: 'ðŸ“';
         }
 
         .single_wrap p {
@@ -852,7 +852,7 @@
                             <!-- Logo -->
                             <div class="col-xl-3 col-lg-2 col-6">
                                 <div class="logo">
-                                    <a href="/" title="Government Job Portal">
+                                    <a href="index.html" title="Government Job Portal">
                                         <img src="img/logo.png" alt="Government Job Portal Logo">
                                     </a>
                                 </div>
@@ -864,13 +864,13 @@
                                     <nav>
                                         <ul id="navigation">
                                             <li>
-                                                <a href="/" title="Home">
+                                                <a href="index.html" title="Home">
                                                     <i class="fas fa-home"></i>
                                                     <span>Home</span>
                                                 </a>
                                             </li>
                                             <li>
-                                                <a href="/jobs" title="Browse Jobs">
+                                                <a href="jobs.html" title="Browse Jobs">
                                                     <i class="fas fa-briefcase"></i>
                                                     <span>Browse Jobs</span>
                                                 </a>
@@ -892,7 +892,7 @@
                             <div class="col-xl-3 col-lg-3 col-6 d-flex justify-content-end">
                                 <div class="Appointment">
                                     <div class="phone_num">
-                                        <a href="/admin" title="Admin Login">
+                                        <a href="admin.html" title="Admin Login">
                                             <i class="fas fa-lock"></i>
                                             <span class="d-none d-sm-inline">Admin</span>
                                         </a>
@@ -911,7 +911,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xl-12">
-                    <a href="/jobs" class="back-button"><i class="fas fa-arrow-left"></i> Back to Jobs</a>
+                    <a href="jobs.html" class="back-button"><i class="fas fa-arrow-left"></i> Back to Jobs</a>
                     <div class="bradcam_text">
                         <h3 id="jobTitle">Loading Job Details...</h3>
                     </div>
@@ -929,7 +929,7 @@
                     <!-- Job Details Header -->
                     <div class="job_details_header fade-in">
                         <div class="single_jobs">
-                            <div id="featuredBadge" class="featured-badge" style="display: none;">⭐ Featured</div>
+                            <div id="featuredBadge" class="featured-badge" style="display: none;">â­ Featured</div>
                             <div class="jobs_left d-flex align-items-center" style="flex: 1;">
                                 <div class="thumb"><img src="img/svg_icon/1.svg" alt="Job Icon"></div>
                                 <div class="jobs_conetent">
@@ -970,9 +970,9 @@
 
                     <!-- Apply Section -->
                     <div class="apply_job_form fade-in">
-                        <h4>🎯 Ready to Apply?</h4>
+                        <h4>ðŸŽ¯ Ready to Apply?</h4>
                         <p>Click below to apply on the official government website.</p>
-                        <a href="#" id="applyBtn" target="_blank" class="boxed-btn3">📝 Apply Now on Official Website</a>
+                        <a href="#" id="applyBtn" target="_blank" class="boxed-btn3">ðŸ“ Apply Now on Official Website</a>
                     </div>
 
                     <!-- Share Section -->
@@ -1062,9 +1062,9 @@
         <!-- Error State Template -->
         <div class="container" id="errorContainer" style="display: none;">
             <div class="error-state">
-                <h2>😔 Job Not Found</h2>
+                <h2>ðŸ˜” Job Not Found</h2>
                 <p>The job you're looking for doesn't exist or has been removed.</p>
-                <a href="/jobs">← Back to Jobs</a>
+                <a href="jobs.html">â† Back to Jobs</a>
             </div>
         </div>
     </div>
@@ -1085,7 +1085,7 @@
     <script src="js/vendor/jquery-1.12.4.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script>
-        const slug = window.location.pathname.split('/').pop();
+        const urlP = new URLSearchParams(window.location.search); const slug = urlP.get('slug') || window.location.pathname.split('/').pop();
 
         function formatDate(dateString) {
             if (!dateString) return 'N/A';
@@ -1102,7 +1102,7 @@
 
         function formatSalary(amount) {
             if (!amount) return '-';
-            return '₹' + parseInt(amount).toLocaleString('en-IN');
+            return 'â‚¹' + parseInt(amount).toLocaleString('en-IN');
         }
 
         fetch('api_job_detail.php?slug=' + slug)
@@ -1165,7 +1165,7 @@
                 // Job Status
                 const statusText = job.is_active ? 'Active' : 'Closed';
                 const statusColor = job.is_active ? '#48bb78' : '#f56565';
-                document.getElementById('jobStatusInfo').innerHTML = `<span style="color: ${statusColor}; font-weight: 700;">● ${statusText}</span>`;
+                document.getElementById('jobStatusInfo').innerHTML = `<span style="color: ${statusColor}; font-weight: 700;">â— ${statusText}</span>`;
 
                 // Store job data for sharing
                 window.jobData = job;
@@ -1212,7 +1212,7 @@
         }
 
         // Load Categories into Navigation Menu
-        fetch('/api/categories')
+        fetch('api_categories.php')
             .then(r => r.json())
             .then(cats => {
                 const menu = document.getElementById('categoryMenu');

@@ -23,19 +23,19 @@
                         <div class="row align-items-center">
                             <div class="col-xl-3 col-lg-2">
                                 <div class="logo">
-                                    <a href="/"><img src="img/logo.png" alt=""></a>
+                                    <a href="index.html"><img src="img/logo.png" alt=""></a>
                                 </div>
                             </div>
                             <div class="col-xl-6 col-lg-7">
                                 <div class="main-menu d-none d-lg-block">
                                     <nav>
                                         <ul id="navigation">
-                                            <li><a href="/" class="active">home</a></li>
-                                            <li><a href="/jobs">Browse Jobs</a></li>
+                                            <li><a href="index.html" class="active">home</a></li>
+                                            <li><a href="jobs.html">Browse Jobs</a></li>
                                             <li><a href="#">States <i class="ti-angle-down"></i></a>
                                                 <ul class="submenu">
-                                                    <li><a href="/jobs?location=Karnataka">Karnataka Jobs</a></li>
-                                                    <li><a href="/jobs?location=Andhra+Pradesh">Andhra Pradesh Jobs</a></li>
+                                                    <li><a href="jobs.html?location=Karnataka">Karnataka Jobs</a></li>
+                                                    <li><a href="jobs.html?location=Andhra+Pradesh">Andhra Pradesh Jobs</a></li>
                                                 </ul>
                                             </li>
                                             <li><a href="#">Category <i class="ti-angle-down"></i></a>
@@ -49,7 +49,7 @@
                             <div class="col-xl-3 col-lg-3 d-none d-lg-block">
                                 <div class="Appointment">
                                     <div class="phone_num d-none d-xl-block">
-                                        <a href="/admin">Admin Login</a>
+                                        <a href="admin.html">Admin Login</a>
                                     </div>
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                             <h3 class="wow fadeInLeft">Find your Dream Government Job</h3>
                             <p class="wow fadeInLeft">Karnataka & Andhra Pradesh Government Jobs | Sarkari Naukri</p>
                             <div class="sldier_btn wow fadeInLeft">
-                                <a href="/jobs" class="boxed-btn3">Browse All Jobs</a>
+                                <a href="jobs.html" class="boxed-btn3">Browse All Jobs</a>
                             </div>
                         </div>
                     </div>
@@ -119,11 +119,11 @@
                     <div class="popular_search d-flex align-items-center">
                         <span>Popular Search:</span>
                         <ul>
-                            <li><a href="/jobs?category=1">IAS</a></li>
-                            <li><a href="/jobs?category=2">IPS</a></li>
-                            <li><a href="/jobs?category=3">Banking</a></li>
-                            <li><a href="/jobs?category=4">Teaching</a></li>
-                            <li><a href="/jobs?category=7">Karnataka Govt</a></li>
+                            <li><a href="jobs.html?category=1">IAS</a></li>
+                            <li><a href="jobs.html?category=2">IPS</a></li>
+                            <li><a href="jobs.html?category=3">Banking</a></li>
+                            <li><a href="jobs.html?category=4">Teaching</a></li>
+                            <li><a href="jobs.html?category=7">Karnataka Govt</a></li>
                         </ul>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
                 </div>
                 <div class="col-lg-6">
                     <div class="brouse_job text-right">
-                        <a href="/jobs" class="boxed-btn4">Browse More Job</a>
+                        <a href="jobs.html" class="boxed-btn4">Browse More Job</a>
                     </div>
                 </div>
             </div>
@@ -187,7 +187,7 @@
                 <div class="row">
                     <div class="col-xl-3 col-md-6 col-lg-3">
                         <div class="footer_widget">
-                            <div class="footer_logo"><a href="/"><img src="img/logo.png" alt=""></a></div>
+                            <div class="footer_logo"><a href="index.html"><img src="img/logo.png" alt=""></a></div>
                             <p>info@jobportal.com<br>+91 98765 43210</p>
                         </div>
                     </div>
@@ -201,8 +201,8 @@
                         <div class="footer_widget">
                             <h3 class="footer_title">Category</h3>
                             <ul>
-                                <li><a href="/jobs?category=1">KAS / IAS</a></li>
-                                <li><a href="/jobs?category=3">Banking Jobs</a></li>
+                                <li><a href="jobs.html?category=1">KAS / IAS</a></li>
+                                <li><a href="jobs.html?category=3">Banking Jobs</a></li>
                             </ul>
                         </div>
                     </div>
@@ -221,7 +221,7 @@
         fetch('api_stats.php')
             .then(r => r.json())
             .then(data => {
-                document.getElementById('jobCount').textContent = data.total_jobs + '+ Jobs available';
+                document.getElementById('jobCount').textContent = `📊 ${data.total_jobs}+ Jobs available`;
             });
 
         // Load categories
@@ -234,11 +234,11 @@
                 
                 categories.forEach(cat => {
                     catSelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
-                    catMenu.innerHTML += `<li><a href="/jobs?category=${cat.id}">${cat.name}</a></li>`;
+                    catMenu.innerHTML += `<li><a href="jobs.html?category=${cat.id}">${cat.name}</a></li>`;
                     catContainer.innerHTML += `
                         <div class="col-lg-4 col-xl-3 col-md-6">
                             <div class="single_catagory">
-                                <a href="/jobs?category=${cat.id}"><h4>${cat.name}</h4></a>
+                                <a href="jobs.html?category=${cat.id}"><h4>${cat.name}</h4></a>
                                 <p><span>${cat.job_count}</span> Available</p>
                             </div>
                         </div>`;
@@ -246,7 +246,7 @@
             });
 
         // Load recent jobs
-        fetch('/api/jobs?limit=6')
+        fetch('api_jobs.php?limit=6')
             .then(r => r.json())
             .then(jobs => {
                 const jobsContainer = document.getElementById('jobsContainer');
@@ -260,7 +260,7 @@
                                     <div class="jobs_left d-flex align-items-center">
                                         <div class="thumb"><img src="img/svg_icon/1.svg" alt=""></div>
                                         <div class="jobs_conetent">
-                                            <a href="/jobs/${job.slug}"><h4>${job.title}</h4></a>
+                                            <a href="job-details.html?slug=${job.slug}"><h4>${job.title}</h4></a>
                                             <div class="links_locat d-flex align-items-center">
                                                 <div class="location"><p><i class="fa fa-map-marker"></i> ${job.location || 'N/A'}</p></div>
                                                 <div class="location"><p><i class="fa fa-clock-o"></i> ${job.job_type || 'Full Time'}</p></div>
@@ -269,7 +269,7 @@
                                     </div>
                                     <div class="jobs_right">
                                         <div class="apply_now">
-                                            <a href="/jobs/${job.slug}" class="boxed-btn3">Apply Now</a>
+                                            <a href="job-details.html?slug=${job.slug}" class="boxed-btn3">Apply Now</a>
                                         </div>
                                         <div class="date"><p>Last Date: ${job.form_end_date || 'N/A'}</p></div>
                                     </div>
@@ -280,7 +280,7 @@
             });
 
         // Load featured jobs
-        fetch('/api/jobs?limit=5')
+        fetch('api_jobs.php?limit=5')
             .then(r => r.json())
             .then(jobs => {
                 const featured = document.getElementById('featuredJobs');
@@ -291,7 +291,7 @@
                         featured.innerHTML += `
                             <div class="single_candidates text-center">
                                 <div class="thumb"><img src="img/candiateds/1.png" alt=""></div>
-                                <a href="/jobs/${job.slug}"><h4>${job.title}</h4></a>
+                                <a href="job-details.html?slug=${job.slug}"><h4>${job.title}</h4></a>
                                 <p>${job.organization}</p>
                             </div>`;
                     });
